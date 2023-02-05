@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --background-color: #85CDFD;
+    --accent-light: #DEFCF9;
+    --accent-medium: #3C84AB;
+    --accent-dark: #362FD9;
+    --calculator-lcd-color: #BBB;
+}
+
+body {
+    background-color: var(--background-color);
+    height: 100vh;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    grid-template-columns: repeat(auto-fit, clamp(200px, 300px, 1fr));
+}
+
+header {
+    grid-column: 1 / 4;
+}
+
+.calculator-body {
+    background-color: var(--accent-medium);
+    width: 40vh;
+    height: 75vh;
+    border-radius: 1em;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, clamp(40px, 50px, 1fr));
+    grid-template-rows:  1fr 4fr;
+    justify-items: center;
+    gap: 1em;
+    padding: 1.5em;
+}
+
+.calculator-screen {
+    background-color: var(--calculator-lcd-color);
+    width: 95%;
+    grid-column: 1 / 5;
+    grid-row: 1 / 2;
+    border-radius: 0.5em;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 500;
+    font-size: 2.5em;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-content: center;
+    text-align: right;
+    padding: 0.25em 0.5em;
+    box-sizing: border-box;
+}
+
+.calculator-keyboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 90%;
+    grid-column: 1 / 5;
+    gap: 1em;
+}
+
+button {
+    border-style: none;
+    border-radius: 0.5em;
+    font-size: 1.5em;
+    background-color: var(--accent-light);
+}
+
+button:hover {
+    background-color: var(--accent-dark);
+}
+
+@media (min-width: 820px) {
+    body {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        justify-items: center;
+        align-items: center;
+    }
+
+    header {
+        grid-column: 1 / 4;
+    }
+
+    .calculator-body {
+        grid-column: 2 / 3;
+        width: 55vh;
+    }
+}
