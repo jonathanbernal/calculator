@@ -1,1 +1,3 @@
-const body = document.querySelector('body');
+let calculatorScreen = $('.calculator-screen');
+
+calculatorScreen.text('hi')
