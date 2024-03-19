@@ -1,3 +1,2 @@
 let calculatorScreen = $('.calculator-screen');
-
-calculatorScreen.text('hi')
+calculatorScreen.text('Test');
