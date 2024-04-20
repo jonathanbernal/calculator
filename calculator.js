@@ -31,14 +31,28 @@ let Calculator = () => {
                     calculatorScreen.val('0');
                     break;
                 case '+' :
-                    if ( !wasOperatorPressed && valueOnScreen !== '0') {
+                    if ( !wasOperatorPressed && valueOnScreen !== '0' ) {
                         accumulator = add(accumulator, valueOnScreen);
-                        calculatorScreen.val(accumulator);
+                        updateCalculatorScreen();
                         wasOperatorPressed = !wasOperatorPressed;
                     } else if ( wasOperatorPressed ) {
                         accumulator = add(accumulator, valueOnScreen);
                         calculatorScreen.val(accumulator);
                     }
+                    break;
+                case '-':
+                    break;
+                case '*':
+                    if ( !wasOperatorPressed && valueOnScreen !== '0' ) {
+                        accumulator = multiply(accumulator, valueOnScreen);
+                        updateCalculatorScreen();
+                        wasOperatorPressed = !wasOperatorPressed;
+                    } else if ( wasOperatorPressed ) {
+                        accumulator = multiply(accumulator, valueOnScreen);
+                        updateCalculatorScreen();
+                    }
+                    break;
+                case '/':
                     break;
                 case '=' :
                     // check for last operation button pressed and perform the last operation before displaying the final result
