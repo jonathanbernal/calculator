@@ -57,6 +57,10 @@ header {
     box-sizing: border-box;
 }
 
+.calculator-screen::placeholder {
+    color: black;
+}
+
 .calculator-keyboard {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
