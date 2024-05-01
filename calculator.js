@@ -2,9 +2,6 @@ import Stack from './Stack';
 
 let Calculator = () => {
     const maximumDigitsOnScreen = 7;
-    let accumulator = 0;
-    let wasOperatorPressed = false;
-    let lastOperatorPressed = null;
     let calculatorScreen = $('.calculator-screen');
 
     // Use two stacks for the parsing algorithm
