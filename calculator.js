@@ -1,12 +1,6 @@
-import Stack from './Stack';
-
 let Calculator = () => {
     const maximumDigitsOnScreen = 7;
     let calculatorScreen = $('.calculator-screen');
-
-    // Use two stacks for the parsing algorithm
-    let valueStack = Stack();
-    let operatorStack = Stack();
 
     let add = (num1, num2) => num1 + num2;
     let subtract = (num1, num2) => num1 - num2;
@@ -83,29 +77,45 @@ let Calculator = () => {
             switch ( operatorPressed ) {
                 case 'ce':
                     userInput = '';
+                    [ firstOperand, operator, secondOperand ] = [null, null, null];
                     clearScreen();
                     break;
                 case '=':
-                    let operationToPerform = userInput.split(' ');
+                    // When the equals sign is pressed multiple times, it performs the last operation
+                    // and adds the second operand to the accumulator every time it is pressed
+                    if ( typeof( firstOperand ) === 'number' && typeof( secondOperand ) === 'number' ) {
+                        firstOperand = operate( firstOperand, secondOperand, operator );
+                        updateCalculatorScreen( firstOperand );
+                    } else {
+                        let operationToPerform = userInput.split(' ');
 
-                    firstOperand = parseFloat(operationToPerform[0]);
-                    operator = operationToPerform[1];
-                    secondOperand = parseFloat(operationToPerform[2]);
+                        [ firstOperand, operator, secondOperand ] = operationToPerform.map( 
+                            val => isNaN( val ) ? val : parseFloat( val ) 
+                        );
 
-                    // Store the result of the operation on the first operator for later
-                    // use in case the user wants to perform additional operations
-                    firstOperand = operate(firstOperand, secondOperand, operator);
-                    updateCalculatorScreen( firstOperand );
-                    // update user input to include the accumulated value
-                    userInput = '' + firstOperand;
+                        // Store the result of the operation on the first operator for later
+                        // use in case the user wants to perform additional operations
+                        firstOperand = operate( firstOperand, secondOperand, operator );
+                        updateCalculatorScreen( firstOperand );
+                        // update user input to include the accumulated value
+                        userInput = '' + firstOperand;
+                    }
+                    
 
                     break;
                 case '+':
+                    // If there is a number on the first operand only, mimic, add them up
+                    // let operationToPerform = userInput.split(' ');
+                    
+                    // if two numbers, 
+                    userInput += ' ' + operatorPressed;
+                    break;
                 case '-':
+                    break;
                 case '*':
+                    break;
                 case '/':
                     
-                    userInput += ' ' + operatorPressed;
                     break;
                 default:
                     break;
