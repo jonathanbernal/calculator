@@ -1,6 +1,10 @@
 let Calculator = () => {
     const maximumDigitsOnScreen = 7;
-    let calculatorScreen = $('.calculator-screen');
+    const calculatorScreen = $('.calculator-screen');
+    const clearBtn = $("#clear-btn");
+    const equalsBtn = $("#equals-btn");
+    const pointBtn = $("#point-btn");
+    const numberBtns = $("[data-type='number']");
 
     let add = (num1, num2) => num1 + num2;
     let subtract = (num1, num2) => num1 - num2;
@@ -19,24 +23,89 @@ let Calculator = () => {
 
     // input variables
     let firstOperand = null, operator = null, secondOperand = null;
-    let userInput = '';
+    let userInput = [];
 
     /**
      * Performs the assigned operation on the table
-     * @param {float} firstOperand 
-     * @param {float} secondOperand 
+     * @param {string} firstOperand 
+     * @param {string} secondOperand 
      * @param {char} operator 
      * @returns 
      */
     let operate = ( firstOperand, secondOperand, operator ) => {
+        let firstNumber = Number(firstOperand);
+        let secondNumber = Number(secondOperand);
+
+        console.log(firstNumber, secondNumber, operator);
+
         let allowedOperators = Object.keys( operatorTable );
         let isOperatorInAllowedOperatorList = allowedOperators.includes( operator );
-
-        if ( isOperatorInAllowedOperatorList ) return operatorTable[operator]( firstOperand, secondOperand );
-        return undefined;
+        console.log('operator table result: ', operatorTable[operator]( firstNumber, secondNumber ))
+        if ( isOperatorInAllowedOperatorList ) return operatorTable[operator]( firstNumber, secondNumber );
+        return NaN;
     }
 
     let isOperator = ( operator ) => operator === '+' || operator === '-' || operator === '*' || operator === '/';
+
+    /**
+     * Updates the value on the screen based on the user input's value
+     * @returns the value on the calculator screen
+     */
+    let updateCalculatorScreen = () => calculatorScreen.val( userInput.join('') );
+
+    /**
+     * Sets the value on the calculator screen to the specified value
+     * @param {*} value the value to set the calculator screen to
+     * @returns 
+     */
+    let setCalculatorScreen = (value) => calculatorScreen.val(value);
+
+    let clearScreen = () => calculatorScreen.val('');
+    let resetInput = () => userInput = [];
+
+    let appendNumberToInput = (number) => userInput.push(number);
+
+    let appendPointToInput = (point) => {
+        if ( point === "." && !userInput.includes(".") ) {
+            userInput.push(point);
+        }
+    }
+
+    // Event handling
+    clearBtn.on( "click", ()=> { clearScreen(); resetInput(); } );
+
+    equalsBtn.on( "click", () => {
+        let operationResult = operate( firstOperand, secondOperand, operator );
+        updateCalculatorScreen( operationResult );
+    });
+
+    pointBtn.on( "click", (event) => {
+        appendPointToInput(event.target.value);
+        updateCalculatorScreen();
+    });
+
+    numberBtns.each( (index, btn) => {
+        $(btn).on("click", (event) => {
+            appendNumberToInput(event.target.value);
+            updateCalculatorScreen();
+        });
+    })
+
+    //TODO: write operator logic. May need a function to set the operator
+    // and some logic to clear out the screen when the second operator is entered
+
+    // handle keys
+    let handleKeyboardInputs = (event) => {
+        let keyPressed = event.key;
+
+        if (keyPressed === "=" || keyPressed === "Enter") {
+
+        } else if (keyPressed === "Delete") {
+            clearScreen();
+            userInput = [];
+        } 
+    }
+    
     
     /**
      * Gets the input from the screen as a floating-point number.
@@ -44,86 +113,12 @@ let Calculator = () => {
      */
     let parseInputFromCalculatorScreen = () => parseFloat( calculatorScreen.val() );
 
-    /**
-     * Updates the value on the screen based on the accumulator's value
-     * @returns the value on the calculator screen
-     */
-    let updateCalculatorScreen = ( newValueOnScreen ) => calculatorScreen.val( newValueOnScreen );
+    
 
+    let setFirstOperand = ( newValue ) => typeof newValue === "number" ? firstOperand = newValue : NaN;
 
-    let clearScreen = () => calculatorScreen.val('');
+    let setSecondoperand = ( newValue ) => typeof newValue === "number" ? secondOperand = newValue : NaN;
 
-    let numberEvents = $('[data-type="number"]').on({
-        'click' : (event) => {
-            const newInputReceived = event.target.value;
-            const lastInputCharacter = userInput.at(-1);
-            const isLastInputCharacterAnOperator = isOperator( lastInputCharacter );
-            
-            if ( isLastInputCharacterAnOperator ) {
-                userInput += ' ' + newInputReceived;
-                clearScreen();
-            } else {
-                userInput += newInputReceived;
-            }
-            
-            updateCalculatorScreen( calculatorScreen.val() + newInputReceived );
-        }
-    });
-
-    let operatorEvents = $('[data-type="operator"]').on({
-        'click' : (event) => {
-            let operatorPressed = event.target.value;
-
-            switch ( operatorPressed ) {
-                case 'ce':
-                    userInput = '';
-                    [ firstOperand, operator, secondOperand ] = [null, null, null];
-                    clearScreen();
-                    break;
-                case '=':
-                    // When the equals sign is pressed multiple times, it performs the last operation
-                    // and adds the second operand to the accumulator every time it is pressed
-                    if ( typeof( firstOperand ) === 'number' && typeof( secondOperand ) === 'number' ) {
-                        firstOperand = operate( firstOperand, secondOperand, operator );
-                        updateCalculatorScreen( firstOperand );
-                    } else {
-                        let operationToPerform = userInput.split(' ');
-
-                        [ firstOperand, operator, secondOperand ] = operationToPerform.map( 
-                            val => isNaN( val ) ? val : parseFloat( val ) 
-                        );
-
-                        // Store the result of the operation on the first operator for later
-                        // use in case the user wants to perform additional operations
-                        firstOperand = operate( firstOperand, secondOperand, operator );
-                        updateCalculatorScreen( firstOperand );
-                        // update user input to include the accumulated value
-                        userInput = '' + firstOperand;
-                    }
-                    
-
-                    break;
-                case '+':
-                    // If there is a number on the first operand only, mimic, add them up
-                    // let operationToPerform = userInput.split(' ');
-                    
-                    // if two numbers, 
-                    userInput += ' ' + operatorPressed;
-                    break;
-                case '-':
-                    break;
-                case '*':
-                    break;
-                case '/':
-                    
-                    break;
-                default:
-                    break;
-            }
-
-            
-        }
-    });
 
 
 }
