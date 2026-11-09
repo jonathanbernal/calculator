@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^5.1.6"
+    "vite": "^8.3.5"
   },
   "dependencies": {
-    
+    "jquery": "^4.0.0"
   }
 }
